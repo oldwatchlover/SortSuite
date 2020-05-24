@@ -18,6 +18,7 @@
 
 #include <stdlib.h>
 #include <string.h>
+
 #include "insertionsort.h"
 
 /*
@@ -27,21 +28,21 @@
 void
 InsertionSort(void *base, size_t nitems, size_t width, int (*compar)(const void *, const void *))
 {
-    int		i, numSorted;
+    int		i, j;
     char	*temp;
 
     temp = (char *) malloc(width);
 
-    for (numSorted=1; numSorted < nitems; numSorted++) {
+    for (i=1; i < nitems; i++) {
 
-	memcpy(temp, base + (numSorted*width), width);
+	memcpy(temp, base + (i*width), width);
  
-        for (i=numSorted; (i>0) && ((compar)(temp, (base+((i-1)*width))) < 0); i--) {
+        for (j=i; (j>0) && ((compar)(temp, (base+((j-1)*width))) < 0); j--) {
 
-	    memcpy(base + (i*width), base + ((i-1)*width), width);
+	    memcpy(base + (j*width), base + ((j-1)*width), width);
         }
 
-	memcpy(base + (i*width), temp, width);
+	memcpy(base + (j*width), temp, width);
     }
 
     free(temp);
@@ -56,22 +57,19 @@ InsertionSort(void *base, size_t nitems, size_t width, int (*compar)(const void 
  */
 void InsertionSortINT(int *array, const int N) 
 { 
-    int		temp, numSorted, i;
+    int		temp, i, j;
 
-    /*
-     * Treat array [0, numSorted) as sorted and the rest to be a
-     * bucket of values awaiting sorting.
-     */
+    /* assume array[0, i] is sorted and the rest is moved one at a time */
 
-    for (numSorted = 1; numSorted < N; numSorted++) {
+    for (i = 1; i < N; i++) {
 
-        temp = array[numSorted]; /* Get the next element to be inserted */
+        temp = array[i]; /* get the next element to be inserted */
 
-        for (i = numSorted; (i > 0) && (temp < array[i - 1]); i--) { /* Drag temp backwards */
-            array[i] = array[i - 1];
+        for (j = i; (j > 0) && (temp < array[j - 1]); j--) { /* move temp backwards */
+            array[j] = array[j - 1];
         }
 
-        array[i] = temp; /* Re-insert temp (possibly at the location where it started!) */
+        array[j] = temp; /* re-insert temp (possibly at it's original location) */
     }
 }
 
