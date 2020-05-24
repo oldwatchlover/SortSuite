@@ -17,24 +17,26 @@
 
 #include "heapsort.h"
 
-
 static void 
 siftDown(int *array, int parent, int end) 
 {
-    const int	value = array[parent];
-    int		maxChild = parent * 2 + 1;
-    int		otherChild;
+    int		value,	maxChild, otherChild;
+
+	/* initialize: */
+    value = array[parent];
+    maxChild = parent * 2 + 1;
 
     while (maxChild <= end) {
 
-        /* See if the other child is larger */
+        /* check if the other child is larger */
         if (maxChild < end) {
             otherChild = maxChild + 1;
             maxChild = (array[otherChild] > array[maxChild]) ? otherChild : maxChild;
         }
 
-        /* Stop when the parent is larger than the max child */
-        if (value >= array[maxChild]) break;
+        /* stop when the parent is larger than the max child */
+        if (value >= array[maxChild]) 
+	    break;
 
         array[parent] = array[maxChild];
 
@@ -45,8 +47,6 @@ siftDown(int *array, int parent, int end)
     array[parent] = value;
 }
 
-#define SWAP(a, b) {int temp = array[a]; array[a] = array[b]; array[b] = temp; }
-
 /*
  * HeapSortINT() function
  *
@@ -55,18 +55,18 @@ siftDown(int *array, int parent, int end)
 void 
 HeapSortINT(int *array, const int nitems) 
 { 
-    int		i;
+    int		i, temp;
 
-    /* Form a max heap */
+    /* build a max heap */
 
     for (i = (nitems / 2); i >= 0; i--)
         siftDown(array, i, nitems - 1);
 
     for (i = nitems - 1; i >= 1; i--) {
-        SWAP(0, i);
+	/* swap: */
+	temp = array[0]; array[0] = array[i]; array[i] = temp;
+
         siftDown(array, 0, i - 1);
     }
 }
-
-#undef SWAP
 
