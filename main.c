@@ -22,8 +22,9 @@ char	*ProgramName;
 
 /* UTILITY FUNCTIONS */
 
-#define TEST_SIZE	12
+#define TEST_SIZE	32
 
+#if 0
 /* an un-aligned structure to test with irregular objects: */
 typedef struct {
     int         key;    /* will sort on this key */
@@ -74,6 +75,7 @@ int funny_compare(const void *a, const void *b)
     else
         return (0);
 }
+#endif
 
 
 static void
@@ -260,7 +262,24 @@ main(int argc, char *argv[])
     elapsed = (double)(end - begin) / CLOCKS_PER_SEC;
     fprintf(stderr,"%s : took %lf seconds.\n\n",ProgramName,elapsed);
 
+	/* test quick sort INT*/
+    fprintf(stdout,"Test QuickSortINT():\n");
+    fprintf(stdout,"\tGiven array is \n\t");
+    fillTestArray(arr, arr_size);
+    printArray(arr, arr_size);
 
+    begin = clock();
+    QuickSortINT(arr, arr_size);
+    end = clock();
+
+    fprintf(stdout,"\n\tSorted array is \n\t");
+    printArray(arr, arr_size);
+
+    elapsed = (double)(end - begin) / CLOCKS_PER_SEC;
+    fprintf(stderr,"%s : took %lf seconds.\n\n",ProgramName,elapsed);
+
+
+#if 0
 	/* test unaligned data sort */
     fprintf(stdout,"Test InsertionSort() with unaligned data:\n");
     fprintf(stdout,"\tGiven array is \n");
@@ -276,8 +295,7 @@ main(int argc, char *argv[])
 
     elapsed = (double)(end - begin) / CLOCKS_PER_SEC;
     fprintf(stderr,"%s : took %lf seconds.\n\n",ProgramName,elapsed);
-
-
+#endif
 
 
     exit(EXIT_SUCCESS);
