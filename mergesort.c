@@ -97,9 +97,9 @@ MergeSort2(int arr[], int l, int r)
  *
  */
 void 
-MergeSortINT(int arr[], int count) 
+MergeSortINT(int arr[], int nitems) 
 { 
-    MergeSort2(arr, 0, count-1);
+    MergeSort2(arr, 0, nitems-1);
 } 
 
 
