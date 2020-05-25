@@ -90,3 +90,59 @@ QuickSort(void *array, size_t nitems, size_t width, int (*compar)(const void *, 
     _quicksort((char *) array, 0, nitems-1, width, compar);
 }
 
+
+/******* INT version, just to be thorough ******/
+
+
+static int
+PartitionINT(int *array, int low, int high)
+{
+    int 	i, j, temp, pivot;
+
+    pivot = array[high];
+    i = low - 1;
+
+    for (j=low; j<= (high-1); j++) {
+
+        /* if current element is <= to the pivot */
+
+	if (array[j] < pivot) {
+            i++;
+	    temp = array[i]; array[i] = array[j]; array[j] = temp;
+        }
+    }
+
+    temp = array[i+1]; array[i+1] = array[high]; array[high] = temp;
+
+    return (i+1);
+}
+
+static void
+_quicksortINT(int *array, int low, int high)
+{
+    int		pi;
+
+    if (low < high) {
+	/* pi is partition index. array[pi] is at the right place */
+	pi = PartitionINT(array, low, high);
+
+        /* partition before and after */
+
+        _quicksortINT(array, low, pi-1);
+        _quicksortINT(array, pi+1, high);
+    }
+}
+
+/*
+ * QuickSortINT()
+ *
+ * Public API
+ *
+ */
+void
+QuickSortINT(int *array, int nitems)
+{
+    _quicksortINT(array, 0, nitems-1);
+}
+
+
