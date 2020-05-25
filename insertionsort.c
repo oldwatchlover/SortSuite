@@ -55,13 +55,13 @@ InsertionSort(void *base, size_t nitems, size_t width, int (*compar)(const void 
  * version with all the pointer math...
  *
  */
-void InsertionSortINT(int *array, const int N) 
+void InsertionSortINT(int *array, const int nitems) 
 { 
     int		temp, i, j;
 
     /* assume array[0, i] is sorted and the rest is moved one at a time */
 
-    for (i = 1; i < N; i++) {
+    for (i = 1; i < nitems; i++) {
 
         temp = array[i]; /* get the next element to be inserted */
 
