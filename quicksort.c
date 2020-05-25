@@ -7,11 +7,14 @@
  * Average case performance: 	O(n log n)
  * Best case performance:	O(n log n)
  * Worst case performance:	O(n^2)
+ * Additional memory required:	O(log n)
  *
- * Memory usage:		O(n)
+ * Not a stable sort. Recurisive algorithm, hence the additional memory usage (stack).
  *
- * Choice of pivot impacts the algorithm. This implementation uses the last element, which can
- * lead to poor performance on already-sorted input.
+ * Choice of pivot impacts the algorithm. This implementation uses the "median of 3" appraoch,
+ * recommended by Segewick, which chooses as pivot the median of: array[low], array[(low+high)/2], array[high]
+ * This avoids the worst case performance when the list is already or nearly sorted (or reverse sorted), which
+ * can be a common situation.
  *
  */
 #include <stdlib.h>
@@ -36,17 +39,29 @@ Swap(char *a, char *b, size_t width)
 static int
 Partition(char *array, int low, int high, size_t width, int (*compar)(const void *, const void *))
 {
-    int 	i, j;
+    int 	i, j, mid;
     char	*pivot;
 
-    pivot = array + (width * high);
-    i = low - 1;
+    /* use the "median of 3" optimization to choose the pivot: */
+    mid = (low + high) / 2;
+    if ((compar)((void *)(array + (mid * width)), (void*)(array + (low * width)))) {
+	Swap((array + (low * width)), array + (mid * width), width);
+    }
+    if ((compar)((void *)(array + (high * width)), (void*)(array + (low * width)))) {
+	Swap((array + (low * width)), array + (high * width), width);
+    }
+    if ((compar)((void *)(array + (mid * width)), (void*)(array + (high * width)))) {
+	Swap((array + (mid * width)), array + (high * width), width);
+    }
 
+    pivot = array + (high * width);
+    i = low - 1;
+    
     for (j=low; j<= (high-1); j++) {
 
         /* if current element is <= to the pivot */
 
-	if ((compar)((void *)(array + (width * j)), (void *)pivot) <= 0) {
+	if ((compar)((void *)(array + (j * width)), (void *)pivot) <= 0) {
             i++;
 	    Swap((array + (i * width)), (array + (j * width)), width);
         }
@@ -58,7 +73,7 @@ Partition(char *array, int low, int high, size_t width, int (*compar)(const void
 }
 
 /*
- * internal func, with parameters so it can be called recursively
+ * internal entry point, with parameters organized so it can be called recursively
  *
  */
 static void
@@ -97,7 +112,19 @@ QuickSort(void *array, size_t nitems, size_t width, int (*compar)(const void *, 
 static int
 PartitionINT(int *array, int low, int high)
 {
-    int 	i, j, temp, pivot;
+    int 	i, j, mid, temp, pivot;
+
+    /* use the "median of 3" optimization to choose the pivot: */
+    mid = (low + high) / 2;
+    if (array[mid] < array[low]) {
+	temp = array[low]; array[low] = array[mid]; array[mid] = temp;
+    }
+    if (array[high] < array[low]) {
+	temp = array[low]; array[low] = array[high]; array[high] = temp;
+    }
+    if (array[mid] < array[high]) {
+	temp = array[mid]; array[mid] = array[high]; array[high] = temp;
+    }
 
     pivot = array[high];
     i = low - 1;

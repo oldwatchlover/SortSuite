@@ -7,11 +7,12 @@
  * Average case peformance:	O(n^2)
  * Best case performance:	O(n)	(if list is already sorted, with extra logic to detect (not in here))
  * Worst case performance:	O(n^2)
+ * Additional memory required:	O(1)
  *
- * Memory performance:		O(n)
+ * Stable sort, very small code size.
  *
- * Rarely used in practice due to performance, it can make sense to use if you know the size of the set to sort
- * is small and you can unroll the loops.
+ * Rarely used in practice due to performance, it can make sense to use if compact code size is desired or if 
+ * you know the size of the set to sort is small and you can unroll the loop.
  *
  */
 

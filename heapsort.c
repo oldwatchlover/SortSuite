@@ -6,10 +6,9 @@
  *
  *
  * Average case performance:	O(n log n)
- * Best case performance:
+ * Best case performance:	O(n log n)
  * Worst case performance:	O(n log n)
- *
- * Memory performance:		O(n)
+ * Additional memory required:	O(1)
  *
  * Not a stable sort.
  *
@@ -57,7 +56,7 @@ HeapSortINT(int *array, const int nitems)
 { 
     int		i, temp;
 
-    /* build a max heap */
+    /* build a max heap (heapify) */
 
     for (i = (nitems / 2); i >= 0; i--)
         siftDown(array, i, nitems - 1);

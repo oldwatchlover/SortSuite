@@ -6,10 +6,12 @@
  * C implementation of merge sort algorithm
  *
  * Average case performance:	O(n log n)
- * Best case performance:	O((n log n)/2)
+ * Best case performance:	O(n log n)
  * Worst case performance:	O(n log n)
+ * Additional memory required:	O(n)
  *
- * Memory performance:		O(2*n)
+ * Stable sort. Highly parallelizable if desired (divide and conquer approach).
+ *
  */
 
 #include "mergesort.h"

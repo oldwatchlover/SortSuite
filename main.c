@@ -164,7 +164,7 @@ main(int argc, char *argv[])
 
 	/* test bubble sort */
     fprintf(stdout,"Test BubbleSort():\n");
-    fprintf(stdout,"\tGiven array is \n\t");
+    fprintf(stdout,"\tTest input array is \n\t");
     fillTestArray(arr, arr_size);
     printArray(arr, arr_size);
 
@@ -181,7 +181,7 @@ main(int argc, char *argv[])
 
 	/* test heap sort */
     fprintf(stdout,"Test HeapSortINT():\n");
-    fprintf(stdout,"\tGiven array is \n\t");
+    fprintf(stdout,"\tTest input array is \n\t");
     fillTestArray(arr, arr_size);
     printArray(arr, arr_size);
 
@@ -197,7 +197,7 @@ main(int argc, char *argv[])
 
 	/* test insertion sort */
     fprintf(stdout,"Test InsertionSortINT():\n");
-    fprintf(stdout,"\tGiven array is \n\t");
+    fprintf(stdout,"\tTest input array is \n\t");
     fillTestArray(arr, arr_size);
     printArray(arr, arr_size);
 
@@ -214,7 +214,7 @@ main(int argc, char *argv[])
 
 	/* test insertion sort */
     fprintf(stdout,"Test InsertionSort():\n");
-    fprintf(stdout,"\tGiven array is \n\t");
+    fprintf(stdout,"\tTest input array is \n\t");
     fillTestArray(arr, arr_size);
     printArray(arr, arr_size);
 
@@ -231,7 +231,7 @@ main(int argc, char *argv[])
 
 	/* test merge sort */
     fprintf(stdout,"Test MergeSortINT():\n");
-    fprintf(stdout,"\tGiven array is \n\t");
+    fprintf(stdout,"\tTest input array is \n\t");
     fillTestArray(arr, arr_size);
     printArray(arr, arr_size);
 
@@ -248,7 +248,7 @@ main(int argc, char *argv[])
 
 	/* test quick sort */
     fprintf(stdout,"Test QuickSort():\n");
-    fprintf(stdout,"\tGiven array is \n\t");
+    fprintf(stdout,"\tTest input array is \n\t");
     fillTestArray(arr, arr_size);
     printArray(arr, arr_size);
 
@@ -264,7 +264,7 @@ main(int argc, char *argv[])
 
 	/* test quick sort INT*/
     fprintf(stdout,"Test QuickSortINT():\n");
-    fprintf(stdout,"\tGiven array is \n\t");
+    fprintf(stdout,"\tTest input array is \n\t");
     fillTestArray(arr, arr_size);
     printArray(arr, arr_size);
 
@@ -282,7 +282,7 @@ main(int argc, char *argv[])
 #if 0
 	/* test unaligned data sort */
     fprintf(stdout,"Test InsertionSort() with unaligned data:\n");
-    fprintf(stdout,"\tGiven array is \n");
+    fprintf(stdout,"\tTest input array is \n\t");
     FillFunnyArray(arr_size);
     PrintFunnyArray(funny_array, arr_size);
 

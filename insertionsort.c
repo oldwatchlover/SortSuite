@@ -8,8 +8,7 @@
  * Average case performance:	O(n^2)
  * Best case performance:	O(n)
  * Worst case performance:	O(n^2)
- *
- * Memory performance:		O(n)
+ * Additional memory required:	O(1)
  *
  *
  * Stable, works well for nearly-sorted input (best case) and can stream (sort a list as it receives it)
