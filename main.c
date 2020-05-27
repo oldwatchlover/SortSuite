@@ -126,7 +126,7 @@ main(int argc, char *argv[])
     clock_t		begin, end;
     time_t		t;
     float		elapsed;
-    int			arr[TEST_SIZE];
+    int			i, tarr[TEST_SIZE], arr[TEST_SIZE];
     int			arr_size = sizeof(arr)/sizeof(arr[0]);
 
     ProgramName = (char *) malloc(strlen(argv[0])+1);
@@ -161,11 +161,13 @@ main(int argc, char *argv[])
     }
 
 
+    fillTestArray(tarr, arr_size);
 
 	/* test bubble sort */
     fprintf(stdout,"Test BubbleSort():\n");
+    for (i=0; i<arr_size; i++)
+	arr[i] = tarr[i];
     fprintf(stdout,"\tTest input array is \n\t");
-    fillTestArray(arr, arr_size);
     printArray(arr, arr_size);
 
     begin = clock();
@@ -180,9 +182,27 @@ main(int argc, char *argv[])
 
 
 	/* test heap sort */
-    fprintf(stdout,"Test HeapSortINT():\n");
+    fprintf(stdout,"Test HeapSort():\n");
+    for (i=0; i<arr_size; i++)
+	arr[i] = tarr[i];
     fprintf(stdout,"\tTest input array is \n\t");
-    fillTestArray(arr, arr_size);
+    printArray(arr, arr_size);
+
+    begin = clock();
+    HeapSort((void *) &(arr[0]), arr_size, sizeof(int), my_compare);
+    end = clock();
+
+    fprintf(stdout,"\n\tSorted array is \n\t");
+    printArray(arr, arr_size);
+
+    elapsed = (double)(end - begin) / CLOCKS_PER_SEC;
+    fprintf(stderr,"%s : took %lf seconds.\n\n",ProgramName,elapsed);
+
+	/* test heap sort */
+    fprintf(stdout,"Test HeapSortINT():\n");
+    for (i=0; i<arr_size; i++)
+	arr[i] = tarr[i];
+    fprintf(stdout,"\tTest input array is \n\t");
     printArray(arr, arr_size);
 
     begin = clock();
@@ -197,8 +217,9 @@ main(int argc, char *argv[])
 
 	/* test insertion sort */
     fprintf(stdout,"Test InsertionSortINT():\n");
+    for (i=0; i<arr_size; i++)
+	arr[i] = tarr[i];
     fprintf(stdout,"\tTest input array is \n\t");
-    fillTestArray(arr, arr_size);
     printArray(arr, arr_size);
 
     begin = clock();
@@ -214,8 +235,9 @@ main(int argc, char *argv[])
 
 	/* test insertion sort */
     fprintf(stdout,"Test InsertionSort():\n");
+    for (i=0; i<arr_size; i++)
+	arr[i] = tarr[i];
     fprintf(stdout,"\tTest input array is \n\t");
-    fillTestArray(arr, arr_size);
     printArray(arr, arr_size);
 
     begin = clock();
@@ -231,8 +253,9 @@ main(int argc, char *argv[])
 
 	/* test merge sort */
     fprintf(stdout,"Test MergeSortINT():\n");
+    for (i=0; i<arr_size; i++)
+	arr[i] = tarr[i];
     fprintf(stdout,"\tTest input array is \n\t");
-    fillTestArray(arr, arr_size);
     printArray(arr, arr_size);
 
     begin = clock();
@@ -248,8 +271,9 @@ main(int argc, char *argv[])
 
 	/* test quick sort */
     fprintf(stdout,"Test QuickSort():\n");
+    for (i=0; i<arr_size; i++)
+	arr[i] = tarr[i];
     fprintf(stdout,"\tTest input array is \n\t");
-    fillTestArray(arr, arr_size);
     printArray(arr, arr_size);
 
     begin = clock();
@@ -264,8 +288,9 @@ main(int argc, char *argv[])
 
 	/* test quick sort INT*/
     fprintf(stdout,"Test QuickSortINT():\n");
+    for (i=0; i<arr_size; i++)
+	arr[i] = tarr[i];
     fprintf(stdout,"\tTest input array is \n\t");
-    fillTestArray(arr, arr_size);
     printArray(arr, arr_size);
 
     begin = clock();
