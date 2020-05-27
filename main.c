@@ -29,6 +29,9 @@ char	*ProgramName;
 #define TEST_SIZE	32
 #define TEST_DATA_RANGE	100
 
+static int	arr_size = TEST_SIZE;
+static int	test_data_range = TEST_DATA_RANGE;
+
 /* UTILITY FUNCTIONS */
 
 /* an un-aligned structure to test with irregular objects: */
@@ -38,7 +41,7 @@ typedef struct {
     float       val;
 } dummy_td;
 
-dummy_td        funny_array[TEST_SIZE];
+dummy_td        *funny_array = (dummy_td *)NULL;
 
 static void
 FillFunnyArray(int count)
@@ -46,11 +49,11 @@ FillFunnyArray(int count)
     int		i;
 
     for (i=0; i<count; i++) {
-        funny_array[i].key = rand() % TEST_DATA_RANGE;
+        funny_array[i].key = rand() % test_data_range;
         funny_array[i].crap[0] = i;
         funny_array[i].crap[1] = i+1;
         funny_array[i].crap[2] = i+2;
-        funny_array[i].val = (float)i * 100.0f;
+        funny_array[i].val = (float)i * (float)test_data_range;
     }
 }
 
@@ -176,8 +179,7 @@ main(int argc, char *argv[])
     clock_t		begin, end;
     time_t		t;
     float		elapsed;
-    int			i, tarr[TEST_SIZE], arr[TEST_SIZE], gold_arr[TEST_SIZE];
-    int			arr_size = sizeof(arr)/sizeof(arr[0]);
+    int			i, *tarr, *arr, *gold_arr;
     int			use_int = 0, use_funny = 0;
 
     ProgramName = (char *) malloc(strlen(argv[0])+1);
@@ -196,6 +198,18 @@ main(int argc, char *argv[])
           case 'u':
  	    use_funny = 1;	/* also test the unaligned structure array test */
 	    break;
+
+          case 'r':
+	    test_data_range = atoi(argv[2]);
+	    argc--;
+	    argv++;
+	    break;
+	    
+          case 's':
+	    arr_size = atoi(argv[2]);
+	    argc--;
+	    argv++;
+	    break;
 	    
 	  default:
 	    fprintf(stderr,"%s : %s : program option [%s] not recognized. Ignored. (File %s, line %d)\n", 
@@ -209,10 +223,15 @@ main(int argc, char *argv[])
 
 	/* initialize some test data, run qsort() for comparison */
 
+    funny_array = (dummy_td *) malloc(arr_size*sizeof(dummy_td));
+    arr = (int *) malloc(arr_size*sizeof(int));
+    tarr = (int *) malloc(arr_size*sizeof(int));
+    gold_arr = (int *) malloc(arr_size*sizeof(int));
+
     fprintf(stdout,"\n%s : Sort Suite algorithm comparison:\n",ProgramName);
     fprintf(stdout,"---------------------------------------\n");
 
-    for (i=0; i<arr_size; i++) { tarr[i] = rand() % TEST_DATA_RANGE; }
+    for (i=0; i<arr_size; i++) { tarr[i] = rand() % test_data_range; }
     for (i=0; i<arr_size; i++) { gold_arr[i] = tarr[i]; }
     fprintf(stdout,"%s : Test input array is:\n\t",ProgramName);
     printArray(gold_arr, arr_size);
@@ -248,8 +267,12 @@ main(int argc, char *argv[])
 
 
     TEST_SORT(BubbleSort);
+    TEST_SORT(heapsort);	/* stdlib version */
     TEST_SORT(HeapSort);
     TEST_SORT(InsertionSort);
+    TEST_SORT(mergesort);	/* stdlib version */
+    TEST_SORT(MergeSort);
+    TEST_SORT(qsort);		/* stdlib version */
     TEST_SORT(QuickSort);
 
 #undef TEST_SORT
