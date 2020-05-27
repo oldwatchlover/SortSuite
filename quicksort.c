@@ -25,15 +25,25 @@
 static void
 Swap(char *a, char *b, size_t width)
 {
-    char *tmp;
+#define QSORT_TEMP_BUFFER_SZ	64
+    char *tmp, buffer[QSORT_TEMP_BUFFER_SZ];
 
-    tmp = (char *) malloc(width);
+/* if the size of the thing to swap is "small", let's use stack space and avoid the malloc() & free() calls... */
+    if (width < QSORT_TEMP_BUFFER_SZ)
+	tmp = &(buffer[0]);
+    else
+        tmp = (char *) malloc(width);
+
+    if (tmp == (char *) NULL)
+	return;		/* can't allocate space for the swap */
 
     memcpy(tmp, a, width);
     memcpy(a, b, width);
     memcpy(b, tmp, width);
 
-    free(tmp);
+    if (width >= QSORT_TEMP_BUFFER_SZ)
+        free(tmp);
+#undef QSORT_TEMP_BUFFER_SZ
 }
 
 static int
