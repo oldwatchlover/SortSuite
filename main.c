@@ -18,7 +18,7 @@
 #include "quicksort.h"
 
 char	*ProgramName;
-#define USAGE_STRING	"[-h] [-i] [-o offset] [-r range] [-s size] [-u]"
+#define USAGE_STRING	"[-h] [-i] [-o offset] [-r range] [-s size] [-u] [-v]"
 
 /* control strings for colored text output: */
 #define DEFAULT_COLOR_TEXT      "\033[0m"       /* goes back to shell default color */
@@ -26,16 +26,17 @@ char	*ProgramName;
 #define GREEN_COLOR_TEXT        "\033[1;32m"
 
 
-#define TEST_SIZE	32
-#define TEST_DATA_RANGE	100
+#define TEST_SIZE	1024
+#define TEST_DATA_RANGE	1024
 
 static int	arr_size = TEST_SIZE;
 static int	test_data_range = TEST_DATA_RANGE;
 static int	test_data_offset = 0;
+static int	be_quiet = 1;
 
 /* UTILITY FUNCTIONS */
 
-/* an un-aligned structure to test with irregular objects: */
+/* an structure to test with irregular objects: */
 typedef struct {
     int         key;    /* will sort on this key */
     char        crap[3];
@@ -148,17 +149,20 @@ testINTsorts(int tarr[], int arr[], int gold_arr[], int arr_size)
          * as well as the text label reporting on that sort
          */
 #define TEST_SORT(a) 									\
+    {											\
+    int alen = strlen(""#a""); 								\
+    char *ac = (alen > 15) ? " " : "\t "; 						\
     for (i=0; i<arr_size; i++) { arr[i] = tarr[i]; } 					\
     begin = clock(); 									\
     a(arr, arr_size);					 				\
     end = clock(); 									\
     elapsed = (double)(end - begin) / CLOCKS_PER_SEC; 					\
     if (compareArray(gold_arr, arr, arr_size)) { 					\
-        fprintf(stdout,"%s : %s()\t\t sort is %s%s%s\t took %lf seconds.\n", 		\
-	    ProgramName,""#a"",GREEN_COLOR_TEXT,"CORRECT",DEFAULT_COLOR_TEXT,elapsed); 	\
+        fprintf(stdout,"%s : %s()\t%ssort is %s%s%s\t took %lf seconds.\n", 		\
+	    ProgramName,""#a"",ac,GREEN_COLOR_TEXT,"CORRECT",DEFAULT_COLOR_TEXT,elapsed); 	\
     } else { 										\
-        fprintf(stdout,"%s : %s()\t\t sort is %s%s%s\t took %lf seconds.\n", 		\
-	    ProgramName,""#a"",RED_COLOR_TEXT,"INCORRECT",DEFAULT_COLOR_TEXT,elapsed); 	}
+        fprintf(stdout,"%s : %s()\t%ssort is %s%s%s\t took %lf seconds.\n", 		\
+	    ProgramName,""#a"",ac,RED_COLOR_TEXT,"INCORRECT",DEFAULT_COLOR_TEXT,elapsed); 	} }
 
 
     TEST_SORT(BubbleSortINT);
@@ -202,7 +206,7 @@ main(int argc, char *argv[])
 	    break;
 	    
           case 'u':
- 	    use_funny = 1;	/* also test the unaligned structure array test */
+ 	    use_funny = 1;	/* also test the array of structure test */
 	    break;
 
           case 'o':
@@ -211,6 +215,10 @@ main(int argc, char *argv[])
 	    argv++;
 	    break;
 	    
+          case 'v':
+ 	    be_quiet = 0;	/* verbose, more output, useful for small tests */
+	    break;
+
           case 'r':
 	    test_data_range = atoi(argv[2]);
 	    argc--;
@@ -240,24 +248,30 @@ main(int argc, char *argv[])
     tarr = (int *) malloc(arr_size*sizeof(int));
     gold_arr = (int *) malloc(arr_size*sizeof(int));
 
-    fprintf(stdout,"\n%s : Sort Suite algorithm comparison:\n",ProgramName);
-    fprintf(stdout,"---------------------------------------\n");
+    fprintf(stdout,"\n%s : Sort Suite algorithm comparison (array of %d integers):\n",ProgramName,arr_size);
+    fprintf(stdout,"---------------------------------------------------------------\n");
 
     for (i=0; i<arr_size; i++) { tarr[i] = (rand() % test_data_range)-test_data_offset; }
     for (i=0; i<arr_size; i++) { gold_arr[i] = tarr[i]; }
-    fprintf(stdout,"%s : Test input array is:\n\t",ProgramName);
-    printArray(gold_arr, arr_size);
+    if (!be_quiet) {
+        fprintf(stdout,"%s : Test input array is:\n\t",ProgramName);
+        printArray(gold_arr, arr_size);
+    }
     begin = clock();
     qsort(gold_arr, arr_size, sizeof(int), my_int_compare);
     end = clock();
 
-    fprintf(stdout,"%s : Correct Sorted array is:\n\t",ProgramName);
-    printArray(gold_arr, arr_size);
+    if (!be_quiet) {
+        fprintf(stdout,"%s : Correct Sorted array is:\n\t",ProgramName);
+        printArray(gold_arr, arr_size);
+    }
     fprintf(stdout,"\n");
 
     elapsed = (double)(end - begin) / CLOCKS_PER_SEC;
-    fprintf(stdout,"%s : %s\t\t sort is %s%s%s\t took %lf seconds.\n",
-	    ProgramName,"qsort() (stdlib)",GREEN_COLOR_TEXT,"CORRECT",DEFAULT_COLOR_TEXT,elapsed);
+    if (!be_quiet) {
+        fprintf(stdout,"%s : %s\t\t sort is %s%s%s\t took %lf seconds.\n",
+	        ProgramName,"qsort() (stdlib)",GREEN_COLOR_TEXT,"CORRECT",DEFAULT_COLOR_TEXT,elapsed);
+    }
 
 
 	/* macro to minimize repeated code... 
@@ -265,17 +279,20 @@ main(int argc, char *argv[])
          * as well as the text label reporting on that sort
          */
 #define TEST_SORT(a) 									\
+    { 											\
+    int alen = strlen(""#a""); 								\
+    char *ac = (alen < 8) ? "\t " : " "; 						\
     for (i=0; i<arr_size; i++) { arr[i] = tarr[i]; } 					\
     begin = clock(); 									\
     a((void *) &(arr[0]), arr_size, sizeof(int), my_int_compare);			\
     end = clock(); 									\
     elapsed = (double)(end - begin) / CLOCKS_PER_SEC; 					\
     if (compareArray(gold_arr, arr, arr_size)) { 					\
-        fprintf(stdout,"%s : %s()\t\t sort is %s%s%s\t took %lf seconds.\n", 		\
-	    ProgramName,""#a"",GREEN_COLOR_TEXT,"CORRECT",DEFAULT_COLOR_TEXT,elapsed); 	\
-    } else { 										\
-        fprintf(stdout,"%s : %s()\t\t sort is %s%s%s\t took %lf seconds.\n", 		\
-	    ProgramName,""#a"",RED_COLOR_TEXT,"INCORRECT",DEFAULT_COLOR_TEXT,elapsed); 	}
+        fprintf(stdout,"%s : %s()\t\t%ssort is %s%s%s\t took %lf seconds.\n", 			\
+	    ProgramName,""#a"",ac,GREEN_COLOR_TEXT,"CORRECT",DEFAULT_COLOR_TEXT,elapsed); 	\
+    } else { 											\
+        fprintf(stdout,"%s : %s()\t\t%ssort is %s%s%s\t took %lf seconds.\n", 			\
+	    ProgramName,""#a"",ac,RED_COLOR_TEXT,"INCORRECT",DEFAULT_COLOR_TEXT,elapsed); } }
 
 
     TEST_SORT(BubbleSort);
@@ -294,21 +311,25 @@ main(int argc, char *argv[])
     }
 
     if (use_funny) {
-	/* test unaligned data sort */
-        fprintf(stdout,"\nTest QuickSort() with unaligned data:\n");
-        fprintf(stdout,"\tTest input structure array sort keys are:\n\t");
+	/* test array of structure data sort */
         FillFunnyArray(arr_size);
-        PrintFunnyArray(funny_array, arr_size, 0);
+        if (!be_quiet) {
+            fprintf(stdout,"\nTest QuickSort() with structure data:\n");
+            fprintf(stdout,"\tTest input structure array sort keys are:\n\t");
+            PrintFunnyArray(funny_array, arr_size, 0);
+        }
 
         begin = clock();
         QuickSort((void *) &(funny_array[0]), arr_size, sizeof(dummy_td), funny_compare);
         end = clock();
-    
-        fprintf(stdout,"\n\tSorted structure array sort keys are:\n\t");
-        PrintFunnyArray(funny_array, arr_size, 0);
-
         elapsed = (double)(end - begin) / CLOCKS_PER_SEC;
-        fprintf(stderr,"%s : took %lf seconds.\n\n",ProgramName,elapsed);
+    
+	if (!be_quiet) {
+            fprintf(stdout,"\n\tSorted structure array sort keys are:\n\t");
+            PrintFunnyArray(funny_array, arr_size, 0);
+        }
+        fprintf(stderr,"%s : %s() of structure array took %lf seconds.\n\n",
+ 		ProgramName,"QuickSort",elapsed);
     }
 
     fprintf(stdout,"\n");
