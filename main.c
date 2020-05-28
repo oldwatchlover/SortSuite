@@ -18,7 +18,7 @@
 #include "quicksort.h"
 
 char	*ProgramName;
-#define USAGE_STRING	"[-i][-u]"
+#define USAGE_STRING	"[-h] [-i] [-o offset] [-r range] [-s size] [-u]"
 
 /* control strings for colored text output: */
 #define DEFAULT_COLOR_TEXT      "\033[0m"       /* goes back to shell default color */
@@ -31,6 +31,7 @@ char	*ProgramName;
 
 static int	arr_size = TEST_SIZE;
 static int	test_data_range = TEST_DATA_RANGE;
+static int	test_data_offset = 0;
 
 /* UTILITY FUNCTIONS */
 
@@ -49,11 +50,11 @@ FillFunnyArray(int count)
     int		i;
 
     for (i=0; i<count; i++) {
-        funny_array[i].key = rand() % test_data_range;
+        funny_array[i].key = (rand() % test_data_range) - test_data_offset;
         funny_array[i].crap[0] = i;
         funny_array[i].crap[1] = i+1;
         funny_array[i].crap[2] = i+2;
-        funny_array[i].val = (float)i * (float)test_data_range;
+        funny_array[i].val = (float)i * (float)(test_data_range-test_data_offset);
     }
 }
 
@@ -191,6 +192,11 @@ main(int argc, char *argv[])
     while ((argc > 1) && (argv[1][0] == '-')) {
 	switch(argv[1][1]) {
 
+	  case 'h':
+	    fprintf(stderr,"%s : %s\n",ProgramName,USAGE_STRING);
+	    exit(EXIT_SUCCESS);
+	    break;
+
           case 'i':	/* also run the *SortINT() tests */
 	    use_int = 1;
 	    break;
@@ -199,6 +205,12 @@ main(int argc, char *argv[])
  	    use_funny = 1;	/* also test the unaligned structure array test */
 	    break;
 
+          case 'o':
+	    test_data_offset = atoi(argv[2]);
+	    argc--;
+	    argv++;
+	    break;
+	    
           case 'r':
 	    test_data_range = atoi(argv[2]);
 	    argc--;
@@ -221,7 +233,7 @@ main(int argc, char *argv[])
 	argv++;
     }
 
-	/* initialize some test data, run qsort() for comparison */
+	/* initialize some test data, run qsort() to generate golden output */
 
     funny_array = (dummy_td *) malloc(arr_size*sizeof(dummy_td));
     arr = (int *) malloc(arr_size*sizeof(int));
@@ -231,7 +243,7 @@ main(int argc, char *argv[])
     fprintf(stdout,"\n%s : Sort Suite algorithm comparison:\n",ProgramName);
     fprintf(stdout,"---------------------------------------\n");
 
-    for (i=0; i<arr_size; i++) { tarr[i] = rand() % test_data_range; }
+    for (i=0; i<arr_size; i++) { tarr[i] = (rand() % test_data_range)-test_data_offset; }
     for (i=0; i<arr_size; i++) { gold_arr[i] = tarr[i]; }
     fprintf(stdout,"%s : Test input array is:\n\t",ProgramName);
     printArray(gold_arr, arr_size);
