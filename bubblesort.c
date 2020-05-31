@@ -11,7 +11,7 @@
  *
  * Stable sort, very small code size.
  *
- * Rarely used in practice due to performance, it can make sense to use if compact code size is desired or if 
+ * Rarely used in practice due to it's performance, but it can make sense to use if compact code size is desired or if 
  * you know the size of the set to sort is small and you can unroll the loop.
  *
  */

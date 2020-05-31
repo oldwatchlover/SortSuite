@@ -260,19 +260,15 @@ main(int argc, char *argv[])
     begin = clock();
     qsort(gold_arr, arr_size, sizeof(int), my_int_compare);
     end = clock();
+    elapsed = (double)(end - begin) / CLOCKS_PER_SEC;
 
     if (!be_quiet) {
         fprintf(stdout,"%s : Correct Sorted array is:\n\t",ProgramName);
         printArray(gold_arr, arr_size);
-    }
-    fprintf(stdout,"\n");
-
-    elapsed = (double)(end - begin) / CLOCKS_PER_SEC;
-    if (!be_quiet) {
+        fprintf(stdout,"\n");
         fprintf(stdout,"%s : %s\t\t sort is %s%s%s\t took %lf seconds.\n",
 	        ProgramName,"qsort() (stdlib)",GREEN_COLOR_TEXT,"CORRECT",DEFAULT_COLOR_TEXT,elapsed);
     }
-
 
 	/* macro to minimize repeated code... 
          * uses macro-fu to pass the parameter that is the sort routine to call,
