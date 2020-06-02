@@ -17,6 +17,13 @@
 #include "mergesort.h"
 #include "quicksort.h"
 
+#ifndef TRUE
+#   define TRUE		1
+#endif
+#ifndef FALSE
+#   define FALSE	0
+#endif
+
 char	*ProgramName;
 #define USAGE_STRING	"[-h] [-i] [-o offset] [-r range] [-s size] [-u] [-v]"
 
@@ -32,7 +39,7 @@ char	*ProgramName;
 static int	arr_size = TEST_SIZE;
 static int	test_data_range = TEST_DATA_RANGE;
 static int	test_data_offset = 0;
-static int	be_quiet = 1;
+static int	be_quiet = TRUE;
 
 /* UTILITY FUNCTIONS */
 
@@ -106,14 +113,15 @@ printArray(int A[], int size)
     fprintf(stdout,"\n");
 }
 
+/* see if 2 arrays of integers are the same (to validate sort) */
 static int
 compareArray(int a[], int b[], int size)
 {
-    int		i, retval = 1;
+    int		i, retval = TRUE;
 
-    for (i=0; i<size; i++) {
+    for (i=0; i<size && retval; i++) {
 	if (a[i] != b[i])
-	    retval = 0;
+	    retval = FALSE;
     }
 
     return(retval);
@@ -146,7 +154,7 @@ testINTsorts(int tarr[], int arr[], int gold_arr[], int arr_size)
 
 	/* macro to minimize repeated code... 
          * uses macro-fu to pass the parameter that is the sort routine to call,
-         * as well as the text label reporting on that sort
+         * as well as the text label in the fpritnf reporting on that sort
          */
 #define TEST_SORT(a) 									\
     {											\
@@ -185,7 +193,7 @@ main(int argc, char *argv[])
     time_t		t;
     float		elapsed;
     int			i, *tarr, *arr, *gold_arr;
-    int			use_int = 0, use_funny = 0;
+    int			use_int = FALSE, use_funny = FALSE;
 
     ProgramName = (char *) malloc(strlen(argv[0])+1);
     strcpy(ProgramName, argv[0]);
@@ -202,11 +210,11 @@ main(int argc, char *argv[])
 	    break;
 
           case 'i':	/* also run the *SortINT() tests */
-	    use_int = 1;
+	    use_int = TRUE;
 	    break;
 	    
           case 'u':
- 	    use_funny = 1;	/* also test the array of structure test */
+ 	    use_funny = TRUE;	/* also test the array of structure test */
 	    break;
 
           case 'o':
@@ -216,7 +224,7 @@ main(int argc, char *argv[])
 	    break;
 	    
           case 'v':
- 	    be_quiet = 0;	/* verbose, more output, useful for small tests */
+ 	    be_quiet = FALSE;	/* verbose, more output, useful for small tests */
 	    break;
 
           case 'r':
@@ -272,7 +280,7 @@ main(int argc, char *argv[])
 
 	/* macro to minimize repeated code... 
          * uses macro-fu to pass the parameter that is the sort routine to call,
-         * as well as the text label reporting on that sort
+         * as well as the text label in the fprintf reporting on that sort
          */
 #define TEST_SORT(a) 									\
     { 											\
